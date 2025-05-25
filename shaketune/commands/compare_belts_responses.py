@@ -37,9 +37,12 @@ def compare_belts_responses(gcmd, config, st_process: ShakeTuneProcess) -> None:
     feedrate_travel = gcmd.get_float('TRAVEL_SPEED', default=120.0, minval=20.0)
     z_height = gcmd.get_float('Z_HEIGHT', default=None, minval=1)
     max_scale = gcmd.get_int('MAX_SCALE', default=None, minval=1)
+    accel_chip = gcmd.get('ACCEL_CHIP', default=None)
 
     if accel_per_hz == '':
         accel_per_hz = None
+    if accel_chip == '':
+        accel_chip = None
 
     if accel_per_hz is None:
         accel_per_hz = default_accel_per_hz
@@ -51,11 +54,13 @@ def compare_belts_responses(gcmd, config, st_process: ShakeTuneProcess) -> None:
     motors_config_parser = MotorsConfigParser(config, motors=None)
     if motors_config_parser.kinematics in {'corexy', 'limited_corexy'}:
         filtered_config = [a for a in AXIS_CONFIG if a['axis'] in ('a', 'b')]
-        accel_chip = Accelerometer.find_axis_accelerometer(printer, 'xy')
+        if accel_chip is None:
+            accel_chip = Accelerometer.find_axis_accelerometer(printer, 'xy')
     elif motors_config_parser.kinematics in {'corexz', 'limited_corexz'}:
         filtered_config = [a for a in AXIS_CONFIG if a['axis'] in ('corexz_x', 'corexz_z')]
         # For CoreXZ kinematics, we can use the X axis accelerometer as most of the time they are moving bed printers
-        accel_chip = Accelerometer.find_axis_accelerometer(printer, 'x')
+        if accel_chip is None:
+            accel_chip = Accelerometer.find_axis_accelerometer(printer, 'x')
     else:
         raise gcmd.error(f'CoreXY and CoreXZ kinematics required, {motors_config_parser.kinematics} found')
     ConsoleOutput.print(f'{motors_config_parser.kinematics.upper()} kinematics mode')
@@ -64,7 +69,10 @@ def compare_belts_responses(gcmd, config, st_process: ShakeTuneProcess) -> None:
         raise gcmd.error(
             'No suitable accelerometer found for measurement! Multi-accelerometer configurations are not supported for this macro.'
         )
-    accelerometer = Accelerometer(printer.lookup_object(accel_chip), printer.get_reactor())
+    k_accelerometer = printer.lookup_object(accel_chip, None)
+    if k_accelerometer is None:
+        raise gcmd.error('User provided ACCEL_CHIP parameter is not valid!')
+    accelerometer = Accelerometer(k_accelerometer, printer.get_reactor())
 
     # Move to the starting point
     if len(test_points) > 1:

@@ -42,9 +42,12 @@ def axes_shaper_calibration(gcmd, config, st_process: ShakeTuneProcess) -> None:
     feedrate_travel = gcmd.get_float('TRAVEL_SPEED', default=120.0, minval=20.0)
     z_height = gcmd.get_float('Z_HEIGHT', default=None, minval=1)
     max_scale = gcmd.get_int('MAX_SCALE', default=None, minval=1)
+    accel_chip = gcmd.get('ACCEL_CHIP', default=None)
 
     if accel_per_hz == '':
         accel_per_hz = None
+    if accel_chip == '':
+        accel_chip = None
 
     if accel_per_hz is None:
         accel_per_hz = default_accel_per_hz
@@ -106,11 +109,16 @@ def axes_shaper_calibration(gcmd, config, st_process: ShakeTuneProcess) -> None:
         toolhead.dwell(0.5)
         toolhead.wait_moves()
 
-        # First we need to find the accelerometer chip suited for the axis
-        accel_chip = Accelerometer.find_axis_accelerometer(printer, config['axis'])
-        if accel_chip is None:
+        # First we need to find the accelerometer chip suited for the axis (if not provided by the user)
+        current_accel_chip = accel_chip  # Use manually specified chip if provided
+        if current_accel_chip is None:
+            current_accel_chip = Accelerometer.find_axis_accelerometer(printer, config['axis'])
+        if current_accel_chip is None:
             raise gcmd.error('No suitable accelerometer found for measurement!')
-        accelerometer = Accelerometer(printer.lookup_object(accel_chip), printer.get_reactor())
+        k_accelerometer = printer.lookup_object(current_accel_chip, None)
+        if k_accelerometer is None:
+            raise gcmd.error(f'Accelerometer chip "{current_accel_chip}" not found!')
+        accelerometer = Accelerometer(k_accelerometer, printer.get_reactor())
 
         # Then do the actual measurements
         ConsoleOutput.print(f'Measuring {config["label"]}...')
