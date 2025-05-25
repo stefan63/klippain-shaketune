@@ -21,11 +21,9 @@ def get_shaper_calibrate_module():
 
 # Import graph creators
 from .axes_map_graph_creator import AxesMapGraphCreator  # noqa: E402
-
 # Import utilities
 from .base_models import ComputationResult, PlotterStrategy  # noqa: E402
 from .belts_graph_creator import BeltsGraphCreator  # noqa: E402
-
 # Import main components
 from .graph_creator import GraphCreator  # noqa: E402
 from .graph_creator_factory import GraphCreatorFactory  # noqa: E402
@@ -50,6 +48,9 @@ __all__ = [
     'PlottingConstants',
     'AxesConfiguration',
     'SpectrogramHelper',
+    'TableHelper',
+    'PeakAnnotator',
+]
     'TableHelper',
     'PeakAnnotator',
 ]
