@@ -127,7 +127,7 @@ def compare_belts_responses(gcmd, config, st_process: ShakeTuneProcess) -> None:
             toolhead, gcode, config['direction'], min_freq, max_freq, hz_per_sec, accel_per_hz, res_tester
         )
         accelerometer.stop_recording()
-        toolhead.dwell(0.5)
+        toolhead.dwell(5)  # Wait 5 seconds to let the printer settle down (needed for low power hosts computers)
         toolhead.wait_moves()
 
     # Re-enable the input shaper if it was active
