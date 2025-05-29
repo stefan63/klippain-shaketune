@@ -6,9 +6,10 @@
 # File: vibrations_graph_creator.py
 # Description: Machine vibrations graph creator implementation
 
-from typing import Any, List, Optional
+from typing import List, Optional
 
 from ..helpers.accelerometer import MeasurementsManager
+from ..helpers.motors_config_parser import Motor
 from ..shaketune_config import ShakeTuneConfig
 from .computations.vibrations_computation import VibrationsComputation
 from .graph_creator import GraphCreator
@@ -23,13 +24,13 @@ class VibrationsGraphCreator(GraphCreator):
         super().__init__(config, VibrationsComputation, VibrationsPlotter)
         self._kinematics: Optional[str] = None
         self._accel: Optional[float] = None
-        self._motors: Optional[List[Any]] = None
+        self._motors: Optional[List[Motor]] = None
 
     def configure(
         self,
         kinematics: str,
         accel: Optional[float] = None,
-        motors: Optional[List[Any]] = None,
+        motors: Optional[List[Motor]] = None,
     ) -> None:
         """Configure the vibrations analysis parameters"""
         self._kinematics = kinematics

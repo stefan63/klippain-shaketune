@@ -58,7 +58,7 @@ class AxesMapComputation:
         position_data = []
         gravities = []
 
-        for _, machine_axis in enumerate(MACHINE_AXES):
+        for machine_axis in MACHINE_AXES:
             if machine_axis not in raw_datas:
                 raise ValueError(f'Missing measurement for axis {machine_axis}')
 

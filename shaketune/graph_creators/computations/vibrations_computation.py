@@ -9,13 +9,14 @@
 import math
 import os
 import re
-from typing import Any, List, Optional, Tuple
+from typing import List, Optional, Tuple
 
 import numpy as np
 
 from ...helpers.accelerometer import Measurement
 from ...helpers.common_func import compute_mechanical_parameters, detect_peaks, identify_low_energy_zones
 from ...helpers.console_output import ConsoleOutput
+from ...helpers.motors_config_parser import Motor
 from .. import get_shaper_calibrate_module
 from ..base_models import GraphMetadata
 from ..computation_results import VibrationsResult
@@ -37,7 +38,7 @@ class VibrationsComputation:
         kinematics: str,
         accel: float,
         max_freq: float,
-        motors: Optional[List[Any]],
+        motors: Optional[List[Motor]],
         st_version: str,
     ):
         self.measurements = measurements

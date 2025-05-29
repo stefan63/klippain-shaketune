@@ -22,7 +22,7 @@ First, you may want to read the **[input shaping and tuning generalities](./is_t
 
 ## Shake&Tune CLI
 
-Shake&Tune also includes a **[command-line interface (CLI)](./cli_usage.md)** that allows you to generate graphs from existing measurement data without needing a running Klipper instance. This is particularly useful for processing data on a different machine (like your laptop) than your printer or re-run a newer/older version of Shake&Tune on an already recorded data files.
+Shake&Tune also includes a **[command-line interface (CLI)](./cli_usage.md)** that allows you to generate graphs from existing measurement data without needing a running Klipper instance. This is particularly useful for processing data on a different machine (like your laptop) than your printer or re-run a newer/older version of Shake&Tune on already recorded data files.
 
 ## Resonance testing workflow
 

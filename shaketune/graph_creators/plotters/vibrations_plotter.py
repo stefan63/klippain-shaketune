@@ -187,7 +187,7 @@ class VibrationsPlotter(PlotterStrategy):
         )
 
         if good_angles is not None:
-            for _, (start, end, _) in enumerate(good_angles):
+            for start, end, _ in good_angles:
                 ax.axvline(
                     angles_radians[start],
                     all_angles_energy[start] / ymax,
@@ -342,7 +342,7 @@ class VibrationsPlotter(PlotterStrategy):
 
         ax.set_xlim([all_speeds.min(), all_speeds.max()])
         max_value = max(
-            spectrogram_data[np.searchsorted(all_angles, angle, side='left')].max() for angle in angle_settings.keys()
+            spectrogram_data[np.searchsorted(all_angles, angle, side='left')].max() for angle in angle_settings
         )
         ax.set_ylim([0, max_value * 1.1])
         fontP = AxesConfiguration.configure_axes(

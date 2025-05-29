@@ -243,7 +243,7 @@ class BeltsComputation:
             (15, 30, 'Likely a mechanical issue'),
             (0, 15, 'Mechanical issue detected'),
         ]
-        mhi = np.clip(mhi, 1, 100)
+        mhi = np.clip(mhi, 0, 100)
         return next(
             (message for lower, upper, message in ranges if lower < mhi <= upper),
             'Unknown mechanical health',
