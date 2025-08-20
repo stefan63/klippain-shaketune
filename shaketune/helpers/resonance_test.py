@@ -251,7 +251,7 @@ class ResonanceTestManager:
 
         for next_t, accel, freq in test_seq:
             t_seg = next_t - last_t
-            toolhead.cmd_M204(gcode.create_gcode_command('M204', 'M204', {'S': abs(accel)}))
+            toolhead.set_max_velocities(None, abs(accel), None, None)
             v = last_v + accel * t_seg
             abs_v = abs(v)
             if abs_v < 1e-6:
@@ -290,7 +290,7 @@ class ResonanceTestManager:
         if last_v != 0.0:
             d_decel = -0.5 * last_v2 / old_max_accel if old_max_accel != 0 else 0
             ddX, ddY, ddZ = self._project_distance(d_decel, normalized_direction)
-            toolhead.cmd_M204(gcode.create_gcode_command('M204', 'M204', {'S': old_max_accel}))
+            toolhead.set_max_velocities(None, old_max_accel, None, None)
             toolhead.move([X + ddX, Y + ddY, Z + ddZ, E], abs(last_v))
 
         # Restore the previous acceleration values
