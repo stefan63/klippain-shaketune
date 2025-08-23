@@ -12,23 +12,25 @@ from datetime import datetime
 
 from ..helpers.accelerometer import Accelerometer, MeasurementsManager
 from ..helpers.common_func import AXIS_CONFIG
-from ..helpers.compat import res_tester_config
+from ..helpers.compat import KlipperCompatibility
 from ..helpers.console_output import ConsoleOutput
 from ..helpers.motors_config_parser import MotorsConfigParser
 from ..helpers.resonance_test import vibrate_axis
 from ..shaketune_process import ShakeTuneProcess
 
 
-def compare_belts_responses(gcmd, config, st_process: ShakeTuneProcess) -> None:
+def compare_belts_responses(gcmd, klipper_config, st_process: ShakeTuneProcess) -> None:
     date = datetime.now().strftime('%Y%m%d_%H%M%S')
 
-    printer = config.get_printer()
+    printer = klipper_config.get_printer()
     toolhead = printer.lookup_object('toolhead')
     res_tester = printer.lookup_object('resonance_tester')
     systime = printer.get_reactor().monotonic()
 
     # Get the default values for the frequency range and the acceleration per Hz
-    default_min_freq, default_max_freq, default_accel_per_hz, test_points = res_tester_config(config)
+    compat = KlipperCompatibility(klipper_config)
+    res_config = compat.get_res_tester_config()
+    default_min_freq, default_max_freq, default_accel_per_hz, test_points = res_config
 
     min_freq = gcmd.get_float('FREQ_START', default=default_min_freq, minval=1)
     max_freq = gcmd.get_float('FREQ_END', default=default_max_freq, minval=1)
@@ -116,7 +118,7 @@ def compare_belts_responses(gcmd, config, st_process: ShakeTuneProcess) -> None:
         ConsoleOutput.print(f'Measuring {config["label"]}...')
         accelerometer.start_recording(measurements_manager, name=config['label'], append_time=True)
         test_params = vibrate_axis(
-            toolhead, gcode, config['direction'], min_freq, max_freq, hz_per_sec, accel_per_hz, res_tester
+            toolhead, gcode, config['direction'], min_freq, max_freq, hz_per_sec, accel_per_hz, res_tester, klipper_config
         )
         accelerometer.stop_recording()
         toolhead.dwell(0.5)
