@@ -21,6 +21,7 @@
 import math
 from collections import namedtuple
 
+from ..helpers.compat import set_toolhead_acceleration
 from ..helpers.console_output import ConsoleOutput
 
 testParams = namedtuple(
@@ -251,7 +252,7 @@ class ResonanceTestManager:
 
         for next_t, accel, freq in test_seq:
             t_seg = next_t - last_t
-            toolhead.set_max_velocities(None, abs(accel), None, None)
+            set_toolhead_acceleration(self.toolhead, self.gcode, accel)
             v = last_v + accel * t_seg
             abs_v = abs(v)
             if abs_v < 1e-6:
@@ -290,7 +291,7 @@ class ResonanceTestManager:
         if last_v != 0.0:
             d_decel = -0.5 * last_v2 / old_max_accel if old_max_accel != 0 else 0
             ddX, ddY, ddZ = self._project_distance(d_decel, normalized_direction)
-            toolhead.set_max_velocities(None, old_max_accel, None, None)
+            set_toolhead_acceleration(self.toolhead, self.gcode, old_max_accel)
             toolhead.move([X + ddX, Y + ddY, Z + ddZ, E], abs(last_v))
 
         # Restore the previous acceleration values

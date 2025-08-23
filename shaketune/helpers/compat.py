@@ -8,7 +8,10 @@
 
 from collections import namedtuple
 
-ResTesterConfig = namedtuple('ResTesterConfig', ['default_min_freq', 'default_max_freq', 'default_accel_per_hz', 'test_points'])
+ResTesterConfig = namedtuple(
+    'ResTesterConfig', ['default_min_freq', 'default_max_freq', 'default_accel_per_hz', 'test_points']
+)
+
 
 def res_tester_config(config) -> ResTesterConfig:
     printer = config.get_printer()
@@ -29,3 +32,19 @@ def res_tester_config(config) -> ResTesterConfig:
         test_points = res_tester.probe_points
 
     return ResTesterConfig(default_min_freq, default_max_freq, default_accel_per_hz, test_points)
+
+
+def set_toolhead_acceleration(toolhead, gcode, accel):
+    """
+    Set toolhead acceleration using the appropriate method based on Klipper version.
+    Uses set_max_velocities for newer Klipper, falls back to cmd_M204 for older versions.
+    """
+    if hasattr(toolhead, 'set_max_velocities'):
+        # New Klipper versions (>= when set_max_velocities was introduced)
+        toolhead.set_max_velocities(None, abs(accel), None, None)
+    elif hasattr(toolhead, 'cmd_M204'):
+        # Old Klipper versions
+        toolhead.cmd_M204(gcode.create_gcode_command('M204', 'M204', {'S': abs(accel)}))
+    else:
+        # Fallback: use gcode command directly
+        gcode.run_script_from_command(f'M204 S{abs(accel)}')
