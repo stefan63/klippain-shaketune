@@ -50,7 +50,7 @@ def compare_belts_responses(gcmd, klipper_config, st_process: ShakeTuneProcess) 
 
     max_accel = max_freq * accel_per_hz
 
-    motors_config_parser = MotorsConfigParser(config, motors=None)
+    motors_config_parser = MotorsConfigParser(klipper_config, motors=None)
     if motors_config_parser.kinematics in {'corexy', 'limited_corexy'}:
         filtered_config = [a for a in AXIS_CONFIG if a['axis'] in ('a', 'b')]
         accel_chip = Accelerometer.find_axis_accelerometer(printer, 'xy')
@@ -118,7 +118,15 @@ def compare_belts_responses(gcmd, klipper_config, st_process: ShakeTuneProcess) 
         ConsoleOutput.print(f'Measuring {config["label"]}...')
         accelerometer.start_recording(measurements_manager, name=config['label'], append_time=True)
         test_params = vibrate_axis(
-            toolhead, gcode, config['direction'], min_freq, max_freq, hz_per_sec, accel_per_hz, res_tester, klipper_config
+            toolhead,
+            gcode,
+            config['direction'],
+            min_freq,
+            max_freq,
+            hz_per_sec,
+            accel_per_hz,
+            res_tester,
+            klipper_config,
         )
         accelerometer.stop_recording()
         toolhead.dwell(0.5)

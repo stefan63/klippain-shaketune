@@ -39,7 +39,7 @@ def excitate_axis_at_freq(gcmd, klipper_config, st_process: ShakeTuneProcess) ->
         raise gcmd.error('AXIS selection invalid. Should be either x, y, a or b!')
 
     if create_graph:
-        printer = config.get_printer()
+        printer = klipper_config.get_printer()
         if accel_chip is None:
             accel_chip = Accelerometer.find_axis_accelerometer(printer, 'xy' if axis in {'a', 'b'} else axis)
         k_accelerometer = printer.lookup_object(accel_chip, None)
