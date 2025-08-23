@@ -43,7 +43,7 @@ class VibrationsGraphCreator(GraphCreator):
             measurements=measurements_manager.get_measurements(),
             kinematics=self._kinematics,
             accel=self._accel,
-            max_freq=self._config.max_freq,
+            max_freq=self._config.max_freq_vibrations,
             motors=self._motors,
             st_version=self._version,
         )
