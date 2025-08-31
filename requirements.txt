@@ -1,6 +1,6 @@
 GitPython==3.1.41
 matplotlib==3.8.2
 numpy==1.26.2
-scipy ## it was like scipy==1.11.4, I saw that the scipy 1.16.1 version was installed
+scipy==1.16.1
 PyWavelets==1.6.0
 zstandard==0.23.0
