@@ -1,4 +1,5 @@
-# Klipper Shake&Tune plugin
+# Klipper Shake&Tune plugin "requirements changed slightly to work with Debian 13 (Trixie)"
+Suggestions from Ruslan Sayfutdinov
 
 Shake&Tune is a Klipper plugin from the [Klippain](https://github.com/Frix-x/klippain) ecosystem, designed to create insightful visualizations to help you troubleshoot your mechanical problems and give you tools to better calibrate the input shaper filters on your 3D printer. It can be installed on any Klipper machine and is not limited to those using the full Klippain.
 
